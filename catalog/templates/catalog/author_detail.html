@@ -1,0 +1,19 @@
+{% extends 'catalog/base_generic.html' %} {% block content %}
+<div>
+	<img src="" alt="Author Image" />
+	<p><strong>Name:</strong>{{author.name}}</p>
+	<!--<p><strong>Biography:</strong>{{author.biography}}</p>-->
+	<p><strong>Date of Birth:</strong>{{author.date_of_birth}}</p>
+	<p><strong>Date of Death:</strong>{{author.date_of_death }}</p>
+	<p><strong>Topics:</strong>
+		{% for book in author.book_set.all %}
+			{% for topic in book.topics.all %}
+				{{ topic.name }}{% if not forloop.last %}, {% endif %}
+			{% endfor %}
+		{% empty %}
+			No topics available.
+		{% endfor %}
+	</p>
+</div>
+
+{% endblock %}

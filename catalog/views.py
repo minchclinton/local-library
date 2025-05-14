@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import *
-
+from django.views import generic
+from django.http import Http404
 
 def index(request):
     number_of_books = Book.objects.all().count()
@@ -35,3 +36,53 @@ def index(request):
 
 def about(request):
     return render(request, 'catalog/about.html')
+
+
+
+
+class BookListView(generic.ListView):
+    model = Book
+    template_name = 'catalog/book_list.html'  # Specify your own template name
+    context_object_name = 'book_list'  # Specify your own context object name
+    paginate_by = 10  # Show 10 books per page
+
+    def get_queryset(self):
+        return Book.objects.all()[:5]  # Return the last five books added
+    
+    
+    
+    
+    
+
+class BookDetailView(generic.DetailView):
+    model = Book
+    template_name = 'catalog/book_detail.html'  # Specify your own template name
+    context_object_name = 'book'  # Specify your own context object name
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj is None:
+            raise Http404("Book not found")
+        return obj
+    
+   
+class AuthorDetailView(generic.DetailView):
+    model = Author
+    template_name = 'catalog/author_detail.html'  # Specify your own template name
+    context_object_name = 'author'  # Specify your own context object name
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj is None:
+            raise Http404("Author not found")
+        return obj
+
+def Author_ListView(request):
+    author= Author.objects.all()
+    context = {
+        'author': author,
+    }
+    return render(request, 'catalog/author_list.html', context=context)
+
+
+    
