@@ -19,7 +19,20 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-2">
-					{% block sidebar %}
+					{% block sidebar %} {% if user.is_authenticated %}
+					<li>User:{{user.get_username}}</li>
+					<li>
+						<form action="{%url 'logout'%}" method="post" id="logout-form">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-link">Logout</button>
+						</form>
+					</li>
+
+					{% else %}
+					<li><a href="{% url 'login' %}">Login</a></li>
+
+					{% endif %}
+
 					<ul class="sidebar-nav">
 						<li><a href="{% url 'index' %}">Home</a></li>
 						<li><a href="{% url 'books'  %}">All books</a></li>
@@ -29,6 +42,7 @@
 					{% endblock %}
 				</div>
 				<div class="col-sm-10">{% block content %} {% endblock %}</div>
+				<div></div>
 			</div>
 		</div>
 		<script
